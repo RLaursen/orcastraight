@@ -45,8 +45,8 @@ pub fn get_clipboard() -> Result(String, ClipboardError) {
       }
     Mac ->
       case simple_spawn("pbpaste", []) {
-        Ok(output) -> Ok(string.drop_end(output, 1))
         // Drop \n
+        Ok(output) -> Ok(string.drop_end(output, 1))
         Error(error) -> Error(MacError(error.1))
       }
     _ -> Error(UnsupportedRuntime)

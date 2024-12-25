@@ -10,7 +10,7 @@ import gleam/regex
 import wemote
 
 pub fn main() {
-  let assert Ok(_) = clipboard.set_clipboard("test")
+  // let assert Ok(_) = clipboard.set_clipboard("test")
   io.debug(clipboard.get_clipboard())
   // let supervisor_subject = process.new_subject()
 
