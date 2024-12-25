@@ -1,13 +1,13 @@
-import gleam/regex
-import wemote
 import barnacle
-import gleam/io
-import gleam/erlang/process
-import gleam/otp/supervisor
-import gleam/list
+import clipboard
 import gleam/erlang/atom
 import gleam/erlang/node
-import clipboard
+import gleam/erlang/process
+import gleam/io
+import gleam/list
+import gleam/otp/supervisor
+import gleam/regex
+import wemote
 
 pub fn main() {
   let assert Ok(_) = clipboard.set_clipboard("test")
