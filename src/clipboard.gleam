@@ -1,5 +1,4 @@
 import gleam/string
-import gleam/io
 import shellout
 
 fn simple_spawn(run, with) {shellout.command(run: run, with: with, in: ".", opt: [])}
@@ -13,22 +12,19 @@ pub type ClipboardError {
 type Runtime {
   Android
   Mac
-  // Windows
-  // Linux
+  Windows
+  Linux
   Unsupported
-}
-
-fn linux_uname (uname_rest) {
-    case string.contains(uname_rest, "android") {
-        True -> Android
-        False -> Unsupported
-    }
 }
 
 fn uname_runtime() {
   case simple_spawn("uname", ["-a"]) {
-    Ok("Darwin"<>_) -> Mac
-    Ok("Linux" <> rest) -> linux_uname(rest) 
+    Ok("Darwin" <> _) -> Mac
+    Ok("Linux" <> rest) -> case string.contains(rest, "android") {
+        True -> Android
+        False -> Linux
+    }
+    Error(_) -> Windows
     _ -> Unsupported
   }
 }
@@ -48,7 +44,7 @@ pub fn get_clipboard() -> Result(String, ClipboardError) {
       Ok(output) -> Ok(string.drop_end(output, 1)) // Drop \n
       Error(error) -> Error(MacError(error.1))
     }
-    Unsupported -> Error(UnsupportedRuntime)
+    _ -> Error(UnsupportedRuntime)
   }
 }
 
@@ -62,6 +58,6 @@ pub fn set_clipboard(content: String) -> Result(Nil, ClipboardError) {
       Ok(_) -> Ok(Nil)
       Error(error) -> Error(MacError(error.1))
     }
-    Unsupported -> Error(UnsupportedRuntime)
+    _ -> Error(UnsupportedRuntime)
   }
 }
