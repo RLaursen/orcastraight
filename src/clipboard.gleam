@@ -18,29 +18,24 @@ type Runtime {
   Unsupported
 }
 
-
-fn in_termux() {
- let termux_command = simple_spawn("command", ["-v", "termux-setup-storage"])
- io.debug(termux_command)
-  case termux_command {
-    Ok(_) -> True
-    Error(_) -> False
-  }
+fn linux_uname (uname_rest) {
+    case string.contains(uname_rest, "android") {
+        True -> Android
+        False -> Unsupported
+    }
 }
 
 fn uname_runtime() {
-  case simple_spawn("uname", []) {
+  case simple_spawn("uname", ["-a"]) {
     Ok("Darwin"<>_) -> Mac
+    Ok("Linux" <> rest) -> linux_uname(rest) 
     _ -> Unsupported
   }
 }
 
 
 fn runtime() {
-  case in_termux() {
-    True -> Android
-    False -> uname_runtime() 
-  }
+  uname_runtime() 
 }
 
 pub fn get_clipboard() -> Result(String, ClipboardError) {
