@@ -20,7 +20,9 @@ type Runtime {
 
 
 fn in_termux() {
-  case simple_spawn("command", ["-v", "termux-setup-storage"]) {
+ let termux_command = simple_spawn("command", ["-v", "termux-setup-storage"])
+ io.debug(termux_command)
+  case termux_command {
     Ok(_) -> True
     Error(_) -> False
   }
